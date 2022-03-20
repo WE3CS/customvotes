@@ -167,10 +167,12 @@ Action Listener_OnVoteReceive(int client, const char[] command, int argc)
 	// Initialize the client vote decision
 	char vote_choice[16];
 	GetCmdArg(1, vote_choice, sizeof(vote_choice));
+
+
 	
 	// Convert the client vote decision into a integer (0 = Yes, 1 = No)
 	int vote_decision = StringToInt(vote_choice[6]) - 1;
-	
+
 	// Execute the vote receive forward.
 	Action fwd_return;
 	Call_StartForward(g_OnVoteReceive);
@@ -199,6 +201,18 @@ Action Listener_OnVoteReceive(int client, const char[] command, int argc)
 	
 	int modified_votes = GetEntProp(g_VoteControllerEnt, Prop_Send, "m_nVoteOptionCount", _, vote_decision) + 1;
 	SetEntProp(g_VoteControllerEnt, Prop_Send, "m_nVoteOptionCount", modified_votes, _, vote_decision);
+
+//================================[ VOTE_DECISION_ ]================================//	
+	if (vote_decision == VOTE_DECISION_YES){
+	PrintToChatAll("[\x06我为C狂\x01] \x05%N\x01同意取消暂停", client);
+	}
+	if (vote_decision == VOTE_DECISION_NONE){
+	PrintToChatAll("[\x06我为C狂\x01] \x02%N\x01未作出选择", client);
+	}
+	if (vote_decision == VOTE_DECISION_NO){
+	PrintToChatAll("[\x06我为C狂\x01] \x02%N\x01不同意取消暂停", client);
+	}
+//================================[ VOTE_DECISION_ ]================================//
 	
 	// Initialize the selection sound effect file path.
 	char sound_effect[PLATFORM_MAX_PATH];
